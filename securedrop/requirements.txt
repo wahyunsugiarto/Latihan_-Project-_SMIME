@@ -1,0 +1,13 @@
+# ── SecureDrop (model PKI client-server) ──────────────────
+# SERVER PUSAT (server.py) hanya butuh:
+cryptography>=42
+
+# KLIEN / Web UI (app.py) butuh tambahan:
+fastapi>=0.110
+uvicorn[standard]>=0.29
+python-multipart>=0.0.9
+itsdangerous>=2.1
+pydantic>=2.6
+
+# Catatan: ekspor PDF audit TIDAK butuh library eksternal
+# (memakai generator PDF minimal bawaan di history.py).

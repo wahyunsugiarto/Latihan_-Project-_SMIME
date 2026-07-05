@@ -1,0 +1,21 @@
+[
+  {
+    "id": 1,
+    "timestamp": "2026-07-05 13:58:24",
+    "transfer_id": "",
+    "direction": "",
+    "stage": "",
+    "status": "ok",
+    "sender": "Test(1)",
+    "receiver": "",
+    "filename": "",
+    "size": 0,
+    "confidentiality": false,
+    "integrity": false,
+    "authentication": false,
+    "non_repudiation": false,
+    "verify_result": "",
+    "result": "registrasi + sertifikat CA",
+    "error": ""
+  }
+]

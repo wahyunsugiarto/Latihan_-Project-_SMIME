@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Masuk · SecureDrop</title>
+<link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+<div class="auth-wrap">
+  <div class="auth-card">
+    <div class="auth-head">
+      <div class="brand">
+        <div class="brand-mark">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2 4 6v6c0 5 3.5 8 8 10 4.5-2 8-5 8-10V6l-8-4Z"/><path d="m9 12 2 2 4-4"/>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-name">SecureDrop</div>
+          <div class="brand-sub">Transfer file terenkripsi ujung-ke-ujung · PKI</div>
+        </div>
+      </div>
+    </div>
+    <div class="auth-body">
+      <div class="tabs">
+        <button class="tab active" id="tab-login" onclick="showTab('login')">Masuk</button>
+        <button class="tab" id="tab-register" onclick="showTab('register')">Daftar</button>
+      </div>
+
+      <div id="panel-login">
+        <label class="field"><span>Nama pengguna</span>
+          <input type="text" id="l-user" autocomplete="username" placeholder="mis. bro"></label>
+        <label class="field"><span>Kata sandi</span>
+          <input type="password" id="l-pass" autocomplete="current-password" placeholder="••••••••"></label>
+        <button class="btn btn-primary btn-block" onclick="doLogin()">Masuk & muat sertifikat</button>
+        <p class="hint">Identitas Anda dijamin oleh sertifikat yang ditandatangani CA. Tak ada IP/port yang perlu diketik.</p>
+      </div>
+
+      <div id="panel-register" style="display:none">
+        <label class="field"><span>Nama pengguna</span>
+          <input type="text" id="r-user" autocomplete="username" placeholder="pilih nama unik"></label>
+        <label class="field"><span>Kata sandi</span>
+          <input type="password" id="r-pass" autocomplete="new-password" placeholder="minimal 4 karakter"></label>
+        <button class="btn btn-primary btn-block" onclick="doRegister()">Daftar & terbitkan sertifikat</button>
+        <p class="hint">Saat mendaftar, perangkat membuat pasangan kunci lalu meminta CA menandatangani sertifikat Anda (CSR → sertifikat).</p>
+      </div>
+
+      <div class="form-msg" id="msg"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+function showTab(which){
+  document.getElementById('tab-login').classList.toggle('active', which==='login');
+  document.getElementById('tab-register').classList.toggle('active', which==='register');
+  document.getElementById('panel-login').style.display = which==='login' ? 'block':'none';
+  document.getElementById('panel-register').style.display = which==='register' ? 'block':'none';
+  msg('');
+}
+function msg(t, kind){ const m=document.getElementById('msg'); m.textContent=t||''; m.className='form-msg '+(kind||''); }
+
+async function post(url, body){
+  const r = await fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)});
+  const data = await r.json().catch(()=>({}));
+  if(!r.ok) throw new Error(data.detail || 'Gagal');
+  return data;
+}
+async function doLogin(){
+  const u=document.getElementById('l-user').value.trim(), p=document.getElementById('l-pass').value;
+  if(!u||!p) return msg('Isi nama pengguna dan kata sandi.','err');
+  msg('Menghubungi server & memuat sertifikat…');
+  try{ await post('/api/login',{username:u,password:p}); location.href='/'; }
+  catch(e){ msg(e.message,'err'); }
+}
+async function doRegister(){
+  const u=document.getElementById('r-user').value.trim(), p=document.getElementById('r-pass').value;
+  if(!u||p.length<4) return msg('Nama pengguna wajib, sandi minimal 4 karakter.','err');
+  msg('Membuat kunci & meminta sertifikat ke CA…');
+  try{ await post('/api/register',{username:u,password:p}); location.href='/'; }
+  catch(e){ msg(e.message,'err'); }
+}
+// tema tersimpan
+(function(){ const t=localStorage.getItem('sd-theme'); if(t) document.documentElement.setAttribute('data-theme',t); })();
+document.addEventListener('keydown',e=>{ if(e.key==='Enter'){ const reg=document.getElementById('panel-register').style.display!=='none'; reg?doRegister():doLogin(); }});
+</script>
+</body>
+</html>

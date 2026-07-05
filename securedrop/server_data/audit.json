@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "timestamp": "2026-07-05 13:58:13",
+    "event": "login",
+    "actor": "Testing(1)",
+    "ip": "127.0.0.1",
+    "result": "GAGAL (kredensial salah)"
+  },
+  {
+    "id": 2,
+    "timestamp": "2026-07-05 13:58:24",
+    "event": "register",
+    "actor": "Test(1)",
+    "ip": "127.0.0.1",
+    "result": "sertifikat diterbitkan"
+  }
+]
